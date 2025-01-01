@@ -95,6 +95,7 @@
 		<nav class="navbar-custom">
 			<div class="nav-wrapper">
 				<a href="#" class="brand-logo">賽爾號圖鑑</a>
+				<a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
 				<ul class="right hide-on-med-and-down">
                     <li>
                         <a class="waves-effect waves-light btn" onclick="window.location.href='index.html'">重置</a>
@@ -105,6 +106,15 @@
 				</ul>
 			</div>
 		</nav>
+
+		<ul class="sidenav" id="mobile-demo">
+			<li>
+				<a class="waves-effect waves-light btn" onclick="window.location.href='index.html'">重置</a>
+			</li>
+			<li>
+				<a class="waves-effect waves-light btn" href="http://news.4399.com/seerjd/">進入遊戲</a>
+			</li>
+		</ul>
 
 		<div
 			class="container"
@@ -143,6 +153,13 @@
 			crossorigin="anonymous"
 			referrerpolicy="no-referrer"></script>
 		<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				var elems = document.querySelectorAll('.sidenav');
+				var instances = M.Sidenav.init(elems);
+			});
+		</script>
 
 		<!-- 利用Google Visualization讀取Google Sheet https://www.labnol.org/code/google-sheet-d3js-visualization-200608 -->
 		<script src="https://www.gstatic.com/charts/loader.js"></script>

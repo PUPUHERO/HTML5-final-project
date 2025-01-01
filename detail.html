@@ -118,16 +118,6 @@
                 <div class="col s3"></div>
 			</div>
 		</div>
-
-		<footer class="page-footer navbar-custom">
-            <div class="footer-copyright">
-                <div class="container">
-                    © 2025 賽爾號圖鑑
-                    <a class="grey-text text-lighten-4 right" href="#!">更多連結</a>
-                </div>
-            </div>
-        </footer>
-
 		<!-- Compiled and minified JavaScript -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 		<script
@@ -251,9 +241,12 @@
                     _desc.textContent = desc[i];
                     cardContent.appendChild(_desc);
 
+                    let skills = processSkills();
+
 					card.appendChild(cardImage);
 					card.appendChild(cardContent);
 					card.appendChild(cardAction);
+                    card.appendChild(skills);
                     
 					col.appendChild(card);
                     row.appendChild(padding);
@@ -261,6 +254,54 @@
                     row.appendChild(padding2);
 				}
 			}
+
+            function processSkills() {
+                var pid = GetUrlVar("pid");
+                var url = 'https://docs.google.com/spreadsheets/d/1_TGeXV1lNOPqRbQkvugxiSQvmTaSOrQg' + `/gviz/tq?sheet=${parseInt(pid, 10)}`;
+                
+                var query = new google.visualization.Query(url);
+                query.setQuery("select *");
+
+                var table = document.createElement("table");
+                table.className = "striped";
+
+                query.send(function(response) {
+                    var data = response.getDataTable();
+                    var columns = data.getNumberOfColumns();
+                    var rows = data.getNumberOfRows();
+
+                    var thead = document.createElement("thead");
+                    var headerRow = document.createElement("tr");
+
+                    for (var c = 0; c < columns; c++) {
+                        var th = document.createElement("th");
+                        th.textContent = data.getFormattedValue(0, c);
+                        headerRow.appendChild(th);
+                    }
+                    thead.appendChild(headerRow);
+                    table.appendChild(thead);
+
+                    var tbody = document.createElement("tbody");
+
+                    for (var r = 1; r < rows; r++) { // Start from 1 to skip header row
+                        var tr = document.createElement("tr");
+                        for (var c = 0; c < columns; c++) {
+                            var td = document.createElement("td");
+                            td.textContent = data.getFormattedValue(r, c);
+                            tr.appendChild(td);
+                        }
+                        tbody.appendChild(tr);
+                    }
+                    table.appendChild(tbody);
+
+                    $(document).ready(function() {
+                        $(table).DataTable({
+                            searching: false
+                        });
+                    });
+                });
+                return table;
+            }
 		</script>
 	</body>
 </html>

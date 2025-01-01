@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>表單練習</title>
+    <!-- 引入 Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <!-- 引入 Materialize Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script>
+        function formresponse() {
+            var m = document.form1.meal.value;
+            var d = document.form1.drink.value;
+            if (d === "") {
+                alert("飲料不可為空白!");
+                return false;
+            } else {
+                var MySubmit =
+                    "https://docs.google.com/forms/d/e/1FAIpQLSeUOlB3hkTjWSObFVpc5F2UIrTLueddsloougelRknk6ryruA/formResponse?usp=pp_url&entry.1169145750=" + m + "&entry.1373263733=" + d + "&submit=Submit";
+                var NewOpen = window.open(MySubmit);
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h3>表單練習</h3>
+        <form name="form1" action="javascript:formresponse();">
+            <div class="row">
+                <div class="input-field col s6">
+                    <i class="material-icons prefix">fastfood</i>
+                    <input id="meal" type="text" name="meal">
+                    <label for="meal">便當</label>
+                </div>
+                <div class="input-field col s6">
+                    <i class="material-icons prefix">local_cafe</i>
+                    <input id="drink" type="text" name="drink">
+                    <label for="drink">飲料</label>
+                </div>
+            </div>
+            <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+                <i class="material-icons right">send</i>
+            </button>
+        </form>
+    </div>
+    <!-- 引入 Materialize JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>

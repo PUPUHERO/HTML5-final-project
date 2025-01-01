@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>賽爾號圖鑑</title>
+		<!--Import Google Icon Font-->
+		<link
+			href="https://fonts.googleapis.com/icon?family=Material+Icons"
+			rel="stylesheet" />
+
+		<!-- Compiled and minified CSS -->
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
+
+		<!-- 利用DataTable呈現表格 https://datatables.net/manual/installation -->
+		<link
+			rel="stylesheet"
+			href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				background-color: #001f3f;
+				color: #ffffff;
+			}
+
+			nav a {
+				color: #00d1b2;
+				text-decoration: none;
+				font-weight: bold;
+			}
+
+			footer {
+				background-color: #001f3f;
+				color: #90a4ae;
+				text-align: center;
+				padding: 10px 20px;
+				position: fixed;
+				bottom: 0;
+				width: 100%;
+			}
+
+			.container {
+				padding: 20px;
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+				gap: 20px;
+			}
+
+			.card {
+				background-color: #90a4ae;
+				border: 2px solid #00d1b2;
+				border-radius: 10px;
+				padding: 20px;
+				width: auto;
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+				text-align: center;
+			}
+
+			.card img {
+				width: 100%;
+				border-radius: 8px;
+				margin-bottom: 10px;
+			}
+
+			.card h3 {
+				margin: 10px 0 5px;
+			}
+
+			.card p {
+				color: #ffffff;
+				font-size: 0.9rem;
+			}
+			.navbar-custom {
+				background-color: #3a3a54; /* 自訂背景顏色 */
+			}
+			.navbar-custom .brand-logo {
+				color: #39ff14; /* 自訂品牌標誌顏色 */
+			}
+			.navbar-custom .nav-wrapper a {
+				color: #a7ffeb; /* 自訂導航連結顏色 */
+			}
+			.page-footer {
+				padding-top: 10px; /* 減少 footer 的 padding */
+				padding-bottom: 10px; /* 減少 footer 的 padding */
+			}
+			.page-footer .container {
+				margin-bottom: 0; /* 移除 container 的 margin */
+			}
+		</style>
+	</head>
+	<body style="background-color: #001f3f">
+		<nav class="navbar-custom">
+			<div class="nav-wrapper">
+				<a href="#" class="brand-logo">賽爾號圖鑑</a>
+				<ul class="right hide-on-med-and-down">
+					<li><a class="waves-effect waves-light btn">重置</a></li>
+					<li>
+						<a class="waves-effect waves-light btn">進入遊戲</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+
+		<div
+			class="container"
+			style="background: #001f3f; padding: 20px"
+			id="container">
+			<div class="row" style="width: 100%">
+				<div class="col s6" style="text-align: center; margin: 0 auto">
+					<h1>賽爾號精靈圖鑑</h1>
+				</div>
+				<div class="col s6">
+					<div class="input-field" style="text-align: center">
+						<input id="search" type="search" required />
+						<label for="search">Search</label>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- <footer class="page-footer navbar-custom">
+            <div class="container">
+                <div class="row">
+                    <div class="col l6 s12">
+                        <h5 class="white-text">賽爾號圖鑑</h5>
+                        <p class="grey-text text-lighten-4">這是一個使用Materialize設計的賽爾號精靈圖鑑網站。</p>
+                    </div>
+                    <div class="col l4 offset-l2 s12">
+                        <h5 class="white-text">連結</h5>
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="#!">首頁</a></li>
+                            <li><a class="grey-text text-lighten-3" href="#!">關於我們</a></li>
+                            <li><a class="grey-text text-lighten-3" href="#!">聯絡我們</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <div class="container">
+                    © 2025 賽爾號圖鑑
+                    <a class="grey-text text-lighten-4 right" href="#!">更多連結</a>
+                </div>
+            </div>
+        </footer> -->
+
+		<!-- Compiled and minified JavaScript -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"
+			integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ=="
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer"></script>
+		<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+
+		<!-- 利用Google Visualization讀取Google Sheet https://www.labnol.org/code/google-sheet-d3js-visualization-200608 -->
+		<script src="https://www.gstatic.com/charts/loader.js"></script>
+
+        <script type="text/javascript">
+			// 取得網址裡的參數
+			function GetUrlVar(VarName) {
+				name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+				var regexS = "[\\?&]" + VarName + "=([^&#]*)";
+				var regex = new RegExp(regexS);
+				var results = regex.exec(window.location.href);
+				if (results == null) return "";
+				else return results[1];
+			}
+		</script>
+
+		<script>
+			google.charts.load("current", { packages: ["corechart"] });
+
+			// Set a callback to run when the Google Visualization API is loaded.
+			google.charts.setOnLoadCallback(init);
+
+			function init() {
+				var url =
+					"https://docs.google.com/spreadsheets/d/1ufK6oIYy9RssinBKr-HwP8H7HmPdMY0Q_FK5ou4H_Z8" +
+					"/gviz/tq?sheet=工作表1";
+				var query = new google.visualization.Query(url);
+
+                if (GetUrlVar("pid") != "") {
+                    var pid = GetUrlVar("pid");
+                    query.setQuery(`select * WHERE A='${pid}'`);
+                } else {
+                    query.setQuery("select *");
+                }
+				query.send(processSheetsData);
+			}
+
+			no_list = [];
+			names = [];
+			type1 = [];
+			type2 = [];
+
+			function processSheetsData(response) {
+				var data = response.getDataTable();
+				var columns = data.getNumberOfColumns();
+				var rows = data.getNumberOfRows();
+
+				//var str = "";
+                if (data.getFormattedValue(0, 0) == "#") {
+                    data.removeRow(0);
+                    rows -= 1;
+                }
+				for (var r = 0; r < rows; r++) {
+					no_list[r] = data.getFormattedValue(r, 0);
+					names[r] = data.getFormattedValue(r, 1);
+					type1[r] = data.getFormattedValue(r, 2);
+					type2[r] = data.getFormattedValue(r, 3);
+				}
+
+				let container = document.getElementById("container");
+
+				for (let i = 0; i < no_list.length; i++) {
+					if (i % 4 == 0) {
+						var row = document.createElement("div");
+						row.className = "row";
+                        row.style = "width: 100%";
+						container.appendChild(row);
+					}
+
+					let col = document.createElement("div");
+					col.className = "col s12 m6 l3";
+
+					let card = document.createElement("div");
+					card.className = "card";
+
+					let cardImage = document.createElement("div");
+					cardImage.className = "card-image";
+
+					let img = document.createElement("img");
+					img.src = "images/image_" + parseInt(no_list[i]) + ".jpg";
+					img.alt = "精靈圖片";
+
+					let span = document.createElement("span");
+					span.className = "card-title";
+					span.textContent = "";
+
+					cardImage.appendChild(img);
+					cardImage.appendChild(span);
+
+					let cardContent = document.createElement("div");
+					cardContent.className = "card-content";
+
+					let comment = document.createElement("p");
+					comment.textContent = "編號: " + no_list[i];
+					cardContent.appendChild(comment);
+
+					let comment2 = document.createElement("p");
+					comment2.textContent = "精靈名稱: ";
+					cardContent.appendChild(comment2);
+
+					let sprite = document.createElement("h5");
+					sprite.textContent = names[i];
+					comment2.appendChild(sprite);
+
+					let attr1 = document.createElement("p");
+					attr1.textContent = "屬性1: " + type1[i];
+					cardContent.appendChild(attr1);
+
+					if (type2[i] != "") {
+						let attr2 = document.createElement("p");
+						attr2.textContent = "屬性2: " + type2[i];
+						cardContent.appendChild(attr2);
+					}
+
+					let cardAction = document.createElement("div");
+					cardAction.className = "card-action";
+
+					let a = document.createElement("a");
+					a.href = "detail.html?pid=" + encodeURIComponent(no_list[i]);
+					a.textContent = "click to see more";
+					cardAction.appendChild(a);
+
+					card.appendChild(cardImage);
+					card.appendChild(cardContent);
+					card.appendChild(cardAction);
+
+					col.appendChild(card);
+					row.appendChild(col);
+				}
+			}
+		</script>
+	</body>
+</html>

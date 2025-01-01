@@ -96,7 +96,9 @@
 			<div class="nav-wrapper">
 				<a href="#" class="brand-logo">賽爾號圖鑑</a>
 				<ul class="right hide-on-med-and-down">
-					<li><a class="waves-effect waves-light btn">重置</a></li>
+					<li>
+                        <a class="waves-effect waves-light btn" onclick="window.location.href='index.html'">重置</a>
+                    </li>
 					<li>
 						<a class="waves-effect waves-light btn">進入遊戲</a>
 					</li>
@@ -109,42 +111,22 @@
 			style="background: #001f3f; padding: 20px"
 			id="container">
 			<div class="row" style="width: 100%">
+                <div class="col s3"></div>
 				<div class="col s6" style="text-align: center; margin: 0 auto">
 					<h1>賽爾號精靈圖鑑</h1>
 				</div>
-				<div class="col s6">
-					<div class="input-field" style="text-align: center">
-						<input id="search" type="search" required />
-						<label for="search">Search</label>
-					</div>
-				</div>
+                <div class="col s3"></div>
 			</div>
 		</div>
 
-		<!-- <footer class="page-footer navbar-custom">
-            <div class="container">
-                <div class="row">
-                    <div class="col l6 s12">
-                        <h5 class="white-text">賽爾號圖鑑</h5>
-                        <p class="grey-text text-lighten-4">這是一個使用Materialize設計的賽爾號精靈圖鑑網站。</p>
-                    </div>
-                    <div class="col l4 offset-l2 s12">
-                        <h5 class="white-text">連結</h5>
-                        <ul>
-                            <li><a class="grey-text text-lighten-3" href="#!">首頁</a></li>
-                            <li><a class="grey-text text-lighten-3" href="#!">關於我們</a></li>
-                            <li><a class="grey-text text-lighten-3" href="#!">聯絡我們</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+		<footer class="page-footer navbar-custom">
             <div class="footer-copyright">
                 <div class="container">
                     © 2025 賽爾號圖鑑
                     <a class="grey-text text-lighten-4 right" href="#!">更多連結</a>
                 </div>
             </div>
-        </footer> -->
+        </footer>
 
 		<!-- Compiled and minified JavaScript -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
@@ -178,7 +160,7 @@
 
 			function init() {
 				var url =
-					"https://docs.google.com/spreadsheets/d/1ufK6oIYy9RssinBKr-HwP8H7HmPdMY0Q_FK5ou4H_Z8" +
+					"https://docs.google.com/spreadsheets/d/11-sIEtBY2ArPLo-m78yz-Wj0j3sLlx09" +
 					"/gviz/tq?sheet=工作表1";
 				var query = new google.visualization.Query(url);
 
@@ -193,8 +175,7 @@
 
 			no_list = [];
 			names = [];
-			type1 = [];
-			type2 = [];
+			desc = [];
 
 			function processSheetsData(response) {
 				var data = response.getDataTable();
@@ -209,8 +190,7 @@
 				for (var r = 0; r < rows; r++) {
 					no_list[r] = data.getFormattedValue(r, 0);
 					names[r] = data.getFormattedValue(r, 1);
-					type1[r] = data.getFormattedValue(r, 2);
-					type2[r] = data.getFormattedValue(r, 3);
+					desc[r] = data.getFormattedValue(r, 2);
 				}
 
 				let container = document.getElementById("container");
@@ -218,13 +198,19 @@
 				for (let i = 0; i < no_list.length; i++) {
 					if (i % 4 == 0) {
 						var row = document.createElement("div");
-						row.className = "row";
+						row.className = "row center-align";
                         row.style = "width: 100%";
 						container.appendChild(row);
 					}
+                    
+                    let padding = document.createElement("div");
+                    padding.className = "col s3";
+
+                    let padding2 = document.createElement("div");
+                    padding2.className = "col s3";
 
 					let col = document.createElement("div");
-					col.className = "col s12 m6 l3";
+					col.className = "col s6";
 
 					let card = document.createElement("div");
 					card.className = "card";
@@ -258,30 +244,21 @@
 					sprite.textContent = names[i];
 					comment2.appendChild(sprite);
 
-					let attr1 = document.createElement("p");
-					attr1.textContent = "屬性1: " + type1[i];
-					cardContent.appendChild(attr1);
-
-					if (type2[i] != "") {
-						let attr2 = document.createElement("p");
-						attr2.textContent = "屬性2: " + type2[i];
-						cardContent.appendChild(attr2);
-					}
-
 					let cardAction = document.createElement("div");
 					cardAction.className = "card-action";
 
-					let a = document.createElement("a");
-					a.href = "detail.html?pid=" + encodeURIComponent(no_list[i]);
-					a.textContent = "click to see more";
-					cardAction.appendChild(a);
+                    let _desc = document.createElement("p");
+                    _desc.textContent = desc[i];
+                    cardContent.appendChild(_desc);
 
 					card.appendChild(cardImage);
 					card.appendChild(cardContent);
 					card.appendChild(cardAction);
-
+                    
 					col.appendChild(card);
+                    row.appendChild(padding);
 					row.appendChild(col);
+                    row.appendChild(padding2);
 				}
 			}
 		</script>

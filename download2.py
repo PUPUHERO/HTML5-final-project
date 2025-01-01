@@ -2,10 +2,14 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
+from opencc import OpenCC
+
+converter = OpenCC('s2twp')
+
 URL = 'https://seerelvesinpokemonstyle.fandom.com'
 
 # Read the third column from output.xlsx
-df = pd.read_excel('output.xlsx', usecols=[2])
+df = pd.read_excel('賽爾號精靈.xlsx', usecols=[2])
 
 # make a list to store the skills
 skills = []
@@ -39,6 +43,17 @@ for index, row in df.iterrows():
         skills.append(df)
         continue
     df = pd.DataFrame(rows)
+    
+    df = df[:-1].copy()
+    if len(df) > 1:
+        df.columns = df.iloc[0]
+        df = df[1:].reset_index(drop=True)
+    
+    for col in df.columns[:4]:
+        df[col] = df[col].apply(lambda x: converter.convert(x))
+        if col == '技能':
+            df[col] = df[col].apply(lambda x: x.split('[')[0])
+    
     skills.append(df)
     print(f"Processed {full_url}")
     
